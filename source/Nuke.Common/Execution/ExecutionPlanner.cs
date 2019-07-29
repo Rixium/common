@@ -100,7 +100,10 @@ namespace Nuke.Common.Execution
             string targetName,
             IReadOnlyCollection<ExecutableTarget> executableTargets)
         {
-            var executableTarget = executableTargets.SingleOrDefault(x => x.Name.EqualsOrdinalIgnoreCase(targetName));
+            var executableTarget =
+                executableTargets.SingleOrDefault(
+                    x => x.Name.EqualsOrdinalIgnoreCase(targetName.Replace("-", string.Empty)));
+
             if (executableTarget == null)
             {
                 Logger.Error(

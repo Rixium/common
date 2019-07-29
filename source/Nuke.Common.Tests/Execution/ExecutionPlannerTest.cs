@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using Nuke.Common.Execution;
+using Nuke.Common.Utilities;
 using Xunit;
 
 namespace Nuke.Common.Tests.Execution
@@ -75,6 +76,20 @@ namespace Nuke.Common.Tests.Execution
             AddTrigger(B, C);
             C.OrderDependencies.Add(A);
             GetPlan().Should().Equal(B, A, C);
+        }
+
+        [Fact]
+        public void TestThatDashedTargetsAreAccepted()
+        {
+            GetPlan(GetAppendedInvokedTargets(new[] { A, B, C }, "-")).Should().Contain(new[] { A, B, C });
+        }
+
+        private ExecutableTarget[] GetAppendedInvokedTargets(ExecutableTarget[] executableTargets, string append)
+        {
+            return executableTargets.Select(x => new ExecutableTarget()
+                                                 {
+                                                     Name = x.Name.Append(append)
+                                                 }).ToArray();
         }
 
         private IEnumerable<ExecutableTarget> GetPlan(ExecutableTarget[] invokedTargets = null)
